@@ -46,7 +46,7 @@ const Hero = () => {
 
   return (
 
-    <div className="relative h-[70vh] md:h-[90vh] overflow-hidden mt-16">
+    <div className="relative h-fit overflow-hidden mt-16 mb-5">
 
       {/* Desktop Layout */}
       <div className="hidden xl:block relative h-[90vh] ">
