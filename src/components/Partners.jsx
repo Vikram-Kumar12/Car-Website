@@ -1,8 +1,8 @@
-import { useState, useEffect, useRef } from 'react';
-import { partnerBrands } from '../constants';
-import { motion } from 'framer-motion';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect, useRef } from "react";
+import { partnerBrands } from "../constants";
+import { motion } from "framer-motion";
+import { ChevronLeft, ChevronRight } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const Partners = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -17,8 +17,8 @@ const Partners = () => {
       setIsMobile(window.innerWidth < 1024);
     };
     checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+    window.addEventListener("resize", checkMobile);
+    return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
   useEffect(() => {
@@ -27,31 +27,31 @@ const Partners = () => {
     const container = scrollContainerRef.current;
     if (!container) return;
 
-    const scrollSpeed = 4;
-    let scrollPosition = 0;
-    const brandWidth = 160;
+    const scrollSpeed = 2; // smoother speed
+    let animationFrameId;
 
     const scroll = () => {
-      scrollPosition += scrollSpeed;
-      if (scrollPosition >= brandWidth * totalBrands) {
-        scrollPosition = 0;
+      container.scrollLeft += scrollSpeed;
+
+      // When we've scrolled half the scroll width (since content is duplicated)
+      if (container.scrollLeft >= container.scrollWidth / 2) {
+        container.scrollLeft = 0; // reset to start without visible jump
       }
-      container.scrollLeft = scrollPosition;
+
+      animationFrameId = requestAnimationFrame(scroll);
     };
 
-    const interval = setInterval(scroll, 50);
-    return () => clearInterval(interval);
-  }, [isMobile, showAllBrands, totalBrands]);
+    animationFrameId = requestAnimationFrame(scroll);
+    return () => cancelAnimationFrame(animationFrameId);
+  }, [isMobile, showAllBrands]);
 
   const nextBrands = () => {
-    setCurrentIndex((prevIndex) => 
-      (prevIndex + brandsPerView) % totalBrands
-    );
+    setCurrentIndex((prevIndex) => (prevIndex + brandsPerView) % totalBrands);
   };
 
   const prevBrands = () => {
-    setCurrentIndex((prevIndex) => 
-      (prevIndex - brandsPerView + totalBrands) % totalBrands
+    setCurrentIndex(
+      (prevIndex) => (prevIndex - brandsPerView + totalBrands) % totalBrands
     );
   };
 
@@ -65,62 +65,77 @@ const Partners = () => {
     <section className="py-12 bg-gray-100">
       <div className="container mx-auto px-4">
         <h2 className="text-3xl font-bold text-center mb-8">Popular brands</h2>
-        
-        {/* Mobile/Tablet View */}
+
+        {/* Mobile/Tablet View with continuous loop */}
         {isMobile && !showAllBrands && (
-          <div 
-            ref={scrollContainerRef}
-            className="flex overflow-x-hidden gap-8 py-4"
-            style={{ scrollBehavior: 'smooth' }}
-          >
-            {[...partnerBrands, ...partnerBrands].map((brand, index) => (
-              <Link to={`/brands/${brand.id}`} key={`mobile-${brand.id}-${index}`}>
-                <motion.div
-                  className="bg-white p-4 rounded-lg shadow-md flex-shrink-0"
-                  style={{ width: '160px' }}
-                  whileHover={{ scale: 1.05 }}
+          <div className="overflow-hidden">
+            <motion.div
+              className="flex gap-8 py-4"
+              style={{ width: "fit-content" }}
+              animate={{ x: ["0%", "-50%"] }}
+              transition={{
+                x: {
+                  repeat: Infinity,
+                  repeatType: "loop",
+                  duration: 15, // 👈 Decrease this to make it faster
+                  ease: "linear",
+                },
+              }}
+            >
+              {[...partnerBrands, ...partnerBrands].map((brand, index) => (
+                <Link
+                  to={`/brands/${brand.id}`}
+                  key={`loop-${brand.id}-${index}`}
                 >
-                  <img 
-                    src={brand.logo} 
-                    alt={brand.name} 
-                    className="h-12 w-full object-contain" 
-                  />
-                </motion.div>
-              </Link>
-            ))}
+                  <div
+                    className="bg-white p-4 rounded-lg shadow-md flex-shrink-0 flex items-center justify-center"
+                    style={{ width: "160px", height:"100px" }}
+                  >
+                    <img
+                      src={brand.logo}
+                      alt={brand.name}
+                      className="h-12 w-full object-contain"
+                    />
+                  </div>
+                </Link>
+              ))}
+            </motion.div>
           </div>
         )}
 
         {/* Desktop View */}
         {!isMobile && !showAllBrands && (
           <div className="flex items-center justify-center gap-4">
-            <button 
+            <button
               onClick={prevBrands}
               className="p-2 rounded-full hover:bg-gray-200 transition-colors"
               aria-label="Previous brands"
             >
               <ChevronLeft className="w-6 h-6" />
             </button>
-            
-            <div className="flex justify-center gap-8 w-full max-w-4xl overflow-hidden">
+
+            <div className="flex justify-center gap-8 w-full  overflow-hidden">
               {visibleBrands.map((brand, index) => (
-                <Link to={`/brands/${brand.id}`} key={`desktop-${brand.id}-${index}`}>
+                <Link
+                  to={`/brands/${brand.id}`}
+                  key={`desktop-${brand.id}-${index}`}
+                >
                   <motion.div
-                    className="bg-white p-4 rounded-lg shadow-md flex-shrink-0"
-                    style={{ width: 'calc(20% - 32px)', minWidth: '160px' }}
+                    className="bg-white p-4 rounded-lg shadow-md flex-shrink-0 flex items-center justify-center"
+                    style={{ width: "calc(20% - 32px)", minWidth: "160px", height:"100px" }}
                     whileHover={{ scale: 1.05 }}
                   >
-                    <img 
-                      src={brand.logo} 
-                      alt={brand.name} 
-                      className="h-12 w-full object-contain" 
+                    <img
+                      src={brand.logo}
+                      alt={brand.name}
+                      className="h-12 w-full object-contain"
                     />
                   </motion.div>
                 </Link>
               ))}
             </div>
-            
-            <button 
+
+            <button
               onClick={nextBrands}
               className="p-2 rounded-full hover:bg-gray-200 transition-colors"
               aria-label="Next brands"
@@ -132,11 +147,11 @@ const Partners = () => {
 
         {/* View All/Less Brands Toggle */}
         <div className="text-center mt-8">
-          <button 
+          <button
             onClick={() => setShowAllBrands(!showAllBrands)}
             className="text-blue-600 font-medium hover:underline"
           >
-            {showAllBrands ? 'Less Brands' : 'View All Brands'}
+            {showAllBrands ? "Less Brands" : "View All Brands"}
           </button>
         </div>
 
@@ -144,25 +159,27 @@ const Partners = () => {
         {showAllBrands && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
-            animate={{ opacity: 1, height: 'auto' }}
+            animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            transition={{ duration: 5 }}
-            className="mt-8"
+            transition={{ duration: 0.5 }}
+            className="mt-8 "
           >
-            <div className={`flex flex-wrap justify-center gap-6 ${
-              isMobile ? 'px-4' : ''
-            }`}>
+            <div
+              className={`flex flex-wrap justify-center gap-6  ${
+                isMobile ? "px-4" : ""
+              }`}
+            >
               {partnerBrands.map((brand) => (
                 <Link to={`/brands/${brand.id}`} key={`all-${brand.id}`}>
                   <motion.div
-                    className="bg-white p-4 rounded-lg shadow-md"
-                    style={{ width: '160px' }}
+                    className="bg-white p-4 rounded-lg shadow-md  flex items-center justify-center"
+                    style={{ width: "130px", height:"100px" }}
                     whileHover={{ scale: 1.05 }}
                   >
-                    <img 
-                      src={brand.logo} 
-                      alt={brand.name} 
-                      className="h-12 w-full object-contain" 
+                    <img
+                      src={brand.logo}
+                      alt={brand.name}
+                      className="h-12 w-full object-contain"
                     />
                   </motion.div>
                 </Link>
@@ -170,7 +187,7 @@ const Partners = () => {
             </div>
           </motion.div>
         )}
-        
+
       </div>
     </section>
   );
