@@ -45,7 +45,7 @@ const About = () => {
             className="w-full lg:w-1/2 h-96 relative rounded-xl overflow-hidden shadow-2xl"
           >
             <img 
-              src="https://images.pexels.com/photos/3825271/pexels-photo-3825271.jpeg" 
+              src="https://images.unsplash.com/photo-1553440569-bcc63803a83d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" 
               alt="Luxury Car Showroom"
               className="w-full h-full object-cover"
               loading="lazy"
