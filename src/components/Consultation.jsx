@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
-import { useState } from "react";
 import { Link } from "react-router-dom";
+
+const MotionLink = motion.create(Link);
 
 const Consultation = () => {
   return (
@@ -11,23 +12,14 @@ const Consultation = () => {
           Get free consultation from our car experts
         </p>
 
-        <Link
+        <MotionLink
           to="/consult"
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          className="px-6
-          py-3
-          bg-yellow-400
-          text-gray-900
-          font-medium
-          rounded-lg
-          hover:bg-yellow-500
-          transition-all
-          duration-300
-          "
+          className="px-6 py-3 bg-yellow-400 text-gray-900 font-medium rounded-lg hover:bg-yellow-500 transition-all duration-300"
         >
           Book Free Consultation
-        </Link>
+        </MotionLink>
       </div>
     </section>
   );

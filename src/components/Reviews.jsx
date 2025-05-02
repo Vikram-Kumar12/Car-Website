@@ -181,7 +181,7 @@ const Reviews = () => {
             speed={800}
             effect={"slide"}
             slideToClickedSlide={true}
-            onSlideChange={() => console.log("slide change")}
+            // onSlideChange={() => console.log("slide change")}
           >
             {testimonials.map((testimonial) => (
               <SwiperSlide key={testimonial.id}>
