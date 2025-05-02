@@ -80,7 +80,7 @@ const BankPartners = () => {
               {[...bankPartners, ...bankPartners].map((bank, index) => (
                 <motion.div
                   key={`mobile-${bank.id}-${index}`}
-                  className="bg-white p-4 rounded-lg shadow-md flex flex-col items-center flex-shrink-0"
+                  className="bg-white p-4 rounded-lg shadow-md flex flex-col items-center justify-center flex-shrink-0"
                   style={{ width: "180px", height: "180px" }}
                   whileHover={{ scale: 1.05 }}
                 >
@@ -114,7 +114,7 @@ const BankPartners = () => {
               {visibleBanks.map((bank, index) => (
                 <motion.div
                   key={`desktop-${bank.id}-${index}`}
-                  className="bg-white p-4 rounded-lg shadow-md flex flex-col items-center"
+                  className="bg-white p-4 rounded-lg shadow-md flex flex-col items-center justify-center"
                   style={{
                     width: "180px",
                     height: "180px",
@@ -174,7 +174,7 @@ const BankPartners = () => {
               {bankPartners.map((bank) => (
                 <motion.div
                   key={`all-${bank.id}`}
-                  className="bg-white mt-2 rounded-lg shadow-md flex flex-col items-center"
+                  className="bg-white mt-2 rounded-lg shadow-md flex flex-col items-center justify-center"
                   style={{
                     width: "150px",
                     height: "180px",
